@@ -57,7 +57,17 @@ var BudgetController = (function () {
 		},
 
 		deleteItem: function (type, id) {
-			
+			var ids, index;
+
+			ids = data.allItems[type].map(function (current) {
+				return current.id
+			});
+
+			index = ids.indexOf(id);
+
+			if (index !== -1) {
+				data.allItems[type].splice(index, 1)
+			}
 		},
 
 		test: function () {
@@ -80,6 +90,10 @@ var BudgetController = (function () {
 			}
 		},
 
+		calculatePercentages: function () {
+			
+		},
+
 		getBudget: function () {
 			return {
 				budget: data.budget,
@@ -87,6 +101,44 @@ var BudgetController = (function () {
 				totalExp: data.totals.exp,
 				percentage: data.percentage
 			}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		}
 	}
 
@@ -148,6 +200,11 @@ var UIController = (function () {
 			document.querySelector(element).insertAdjacentHTML('beforeend', newHTML);
 		},
 
+		deleteListItem: function (selectorID) {
+			var el = document.getElementById(selectorID);
+			el.parentNode.removeChild(el);
+		},
+
 		displayBudget: function (obj) {
 			document.querySelector(domStrings.budgetLabel).textContent = obj.budget;
 			document.querySelector(domStrings.incomeLabel).textContent = obj.totalInc;
@@ -186,6 +243,10 @@ var AppController = (function (BudgetCont, UICont) {
 		UICont.displayBudget(budget);
 	}
 
+	var updatePercentages = function () {
+
+	}
+
 	function contAddItems() {
 		var input, newItem;
 
@@ -204,17 +265,29 @@ var AppController = (function (BudgetCont, UICont) {
 			//Display the budget on UI
 
 			updateBudget();
+
+			updatePercentages();
 		}
 	}
 
 	function contDeleteItems(event) {
-		var itemID, splitID, type, id;
-		itemID = event.target.parentNode.parentNode.parentNode.parnetNode.id
+		var itemID, splitID, type, ID;
+		itemID = event.target.parentNode.parentNode.parentNode.parentNode.id
 		if (itemID) {
 			splitID = itemID.split('-');
 			type = splitID[0];
-			id = splitID[1];
+			ID = parseInt(splitID[1]);
 		}
+
+		//delete item from budget
+		BudgetCont.deleteItem(type, ID);
+
+		//delete item from budget UI
+		UICont.deleteListItem(itemID);
+
+		//update budget
+		updateBudget();
+		updatePercentages();
 	}
 
 	return {
